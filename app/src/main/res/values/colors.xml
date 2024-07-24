@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="bounding_box_color">#3E33DA</color>
+    <color name="toolbar_background">#3E33DA</color>
+    <color name="bottom_sheet_background">#FFFFFF</color>
+    <color name="bottom_sheet_text_color">#FFFFFF</color>
+    <color name="icActive">#FFFFFF</color>
+    <color name="icFocused">#FFFFFF</color>
+    <color name="icPressed">#FFFFFF</color>
+    <color name="blue1">#3E33DA</color>
+
+    <color name="backgroundColorUno">#000000</color>
+    <color name="backgroundColorDos">#24025A</color>
+    <color name="backgroundColorTres">#000000</color>
+</resources>
