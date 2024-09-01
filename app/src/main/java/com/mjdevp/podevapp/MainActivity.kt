@@ -41,6 +41,7 @@ import com.google.firebase.messaging.ktx.messaging
 import com.ingenieriiajhr.jhrCameraX.CameraJhr
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.opencv.android.OpenCVLoader
 import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -82,10 +83,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var objeto: String = ""
     private var acumObject: String = ""
     private var contadorObjeto = 0
-    private var textToSpeech: TextToSpeech? = null
-    private var isTtsInitialized = false
+    var textToSpeech: TextToSpeech? = null
+    var isTtsInitialized = false
     private var hablando = false
     private var enEscucha = false
+
+    private var extractRuta : ExtractRuta? = null
+    var ruta : String = " "
 
     companion object {
         private const val TAG = "CameraXApp"
@@ -129,6 +133,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         geocodingService = GeocodingService(this, dataProfile, fusedLocationProviderClient, this)
         analytics = AnalyticsManager(this)
         auth = AuthManager(this, geocodingService, analytics, dataProfile)
+        if(OpenCVLoader.initDebug()) Log.d("MainActivity", "OpenCV loaded successfully")
+        else Log.d("MainActivity", "OpenCV loaded failed")
+        extractRuta = ExtractRuta(this,this)
         user = auth.getCurrentUser()
         otpSmsReceiver = OtpSmsReceiver(auth)
         setupAuthStateListener()
@@ -476,9 +483,20 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                             textToSpeech?.speak(objeto, TextToSpeech.QUEUE_FLUSH, null, null)
                         }
 
+                        if (objeto == "Bus cerca") {
+                            val bitmapOpenCV = extractRuta?.setUtils(img!!)
+                            val newBitmapOpenCVRot = bitmapOpenCV!!.rotate(90)
+                            runOnUiThread {
+                                binding.imgBitMap.setImageBitmap(newBitmapOpenCVRot)
+                            }
+                        }
+
                         lifecycleScope.launch {
                             delay(4000)
                             hablando = false
+                            if (isTtsInitialized) {
+                                textToSpeech?.speak(ruta, TextToSpeech.QUEUE_FLUSH, null, null)
+                            }
                         }
                     }else if(acumObject == objeto && saludado){
                         contadorObjeto += 1
@@ -491,7 +509,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         })
         /**Preview Image Get */
         runOnUiThread {
-            binding.imgBitMap.setImageBitmap(rotatedImg)
+            //binding.imgBitMap.setImageBitmap(rotatedImg)
         }
         classifyTf.classify(rotatedImg)
     }
@@ -1091,5 +1109,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         stopAuthStateListener()
         geocodingService.stopUpdatingLocation()
         stopTextToSpeech()
+        extractRuta?.recycle()
     }
 }

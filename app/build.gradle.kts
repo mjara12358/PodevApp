@@ -21,7 +21,7 @@ android {
         applicationId = "com.mjdevp.podevapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -104,4 +104,16 @@ dependencies {
 
     implementation(libs.coroutinesCore)
     implementation(libs.coroutinesAndroid)
+
+    // OpenCv
+    implementation("com.github.jose-jhr:openCvAndroidGameBall:1.0.2")
+
+    // Tesseract
+    implementation("cz.adaptech.tesseract4android:tesseract4android:4.7.0")
+
+    //implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    //implementation ("com.google.firebase:firebase-ml-vision:24.0.3")
+
+    // ML Kit
+    implementation ("com.google.mlkit:text-recognition:16.0.1")
 }
